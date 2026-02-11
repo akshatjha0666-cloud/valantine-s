@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For MUSKU ❤️</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    height:100vh;
+    background:linear-gradient(135deg,#0f0f0f,#1c1c1c);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:'Segoe UI',sans-serif;
+    overflow:hidden;
+    color:white;
+    text-align:center;
+}
+
+/* CARD */
+.card{
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(20px);
+    padding:30px;
+    width:90%;
+    max-width:400px;
+    border-radius:20px;
+    box-shadow:0 0 40px rgba(255,0,100,0.15);
+    transition:all 0.8s ease;
+    z-index:5;
+}
+
+button{
+    padding:12px 24px;
+    border:none;
+    border-radius:30px;
+    font-size:15px;
+    cursor:pointer;
+    margin-top:20px;
+    background:#ff2e63;
+    color:white;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.1);
+}
+
+.hidden{
+    display:none;
+}
+
+.fadeOut{
+    opacity:0;
+    transform:scale(0.9);
+}
+
+.fadeIn{
+    animation:fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:scale(0.9);}
+    to{opacity:1;transform:scale(1);}
+}
+
+/* HEART RAIN */
+.heart{
+    position:absolute;
+    color:#ff2e63;
+    animation:fall linear forwards;
+    z-index:1;
+}
+
+@keyframes fall{
+    to{
+        transform:translateY(100vh);
+        opacity:0;
+    }
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div class="card" id="firstpage">
+    <h1>MUSKAN BABY 💕</h1>
+    <p style="margin-top:15px;">I made something for you…</p>
+    <button onclick="goIntro()">Ye lo 😌</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="card hidden" id="introPage">
+    <h1>Waittt… 👀</h1>
+    <p style="margin-top:15px;line-height:1.6;">
+        Hey MUSKU…  
+        Don’t rush this.  
+        The next thing you’re about to see was made especially for you —
+        and maybe… just maybe… it carries a little piece of my heart. 💌
+    </p>
+    <button onclick="goNext()">Ready hoe aap 😨</button>
+</div>
+
+<!-- PAGE 3 -->
+<div class="card hidden" id="mainPage">
+    <h1>Hey MUSKU 💕</h1>
+    <p>I have something really special to ask you...</p>
+    <h2 style="margin:15px 0;">Will you be my Valentine? 💌</h2>
+
+    <button id="yesBtn" onclick="yesClicked()">Yes 😍</button>
+    <button id="noBtn" style="background:white;color:#ff2e63;">No 🙈</button>
+</div>
+
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
+    <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="confetti"></canvas>
+
+<script>
+
+/* MUSIC START */
+document.body.addEventListener("click", function(){
+    let m=document.getElementById("bgMusic");
+    m.volume=0.3;
+    m.play();
+},{once:true});
+
+/* PAGE SWITCH */
+function goIntro(){
+    let first=document.getElementById("firstpage");
+    let intro=document.getElementById("introPage");
+
+    first.classList.add("fadeOut");
+    setTimeout(()=>{
+        first.classList.add("hidden");
+        intro.classList.remove("hidden");
+        intro.classList.add("fadeIn");
+    },700);
+}
+
+function goNext(){
+    let intro=document.getElementById("introPage");
+    let main=document.getElementById("mainPage");
+
+    intro.classList.add("fadeOut");
+    setTimeout(()=>{
+        intro.classList.add("hidden");
+        main.classList.remove("hidden");
+        main.classList.add("fadeIn");
+    },700);
+}
+
+/* YES CLICK */
+function yesClicked(){
+    let main=document.getElementById("mainPage");
+    main.classList.add("fadeOut");
+
+    setTimeout(()=>{
+        main.innerHTML=`
+        <h1>MUSKU 🐰</h1>
+        <p style="font-size:20px; line-height:1.6;">
+        I don't know how to explain (haha I'm kinda bad at expressing feelings),  
+        but saying yes means more to me than you can imagine.  
+        You make my days softer, my thoughts happier,  
+        and my heart feel like it finally found its favorite place.  
+
+        With you, even silence feels special and random talks  
+        turn into my favourite memories.  
+
+        I don’t know what the future holds,  
+        but I know I’d really like you to be a part of mine. 💗
+        </p>
+        `;
+        main.classList.remove("fadeOut");
+        main.classList.add("fadeIn");
+        startConfetti();
+    },700);
+}
+
+/* PLAYFUL NO BUTTON */
+let cuteTexts=[
+"aachaw!!!? 🥺",
+"Momos kilaungaww ☹️",
+"baby nai hai?? 😔",
+"sochleyy phirsey ☺️",
+"cry kardungaw 😔",
+"Please naww? 🫶"
+];
+
+let i=0;
+const noBtn=document.getElementById("noBtn");
+
+noBtn.addEventListener("mouseover",function(){
+    noBtn.innerText=cuteTexts[i];
+    i=(i+1)%cuteTexts.length;
+
+    let shiftX=Math.random()*40-20;
+    let shiftY=Math.random()*20-10;
+    noBtn.style.transform=`translate(${shiftX}px,${shiftY}px) scale(1.05)`;
+
+    setTimeout(()=>{
+        noBtn.style.transform="translate(0,0)";
+    },300);
+});
+
+/* HEART RAIN */
+function createHeart(){
+    const heart=document.createElement("div");
+    heart.className="heart";
+    heart.innerHTML="💖";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=Math.random()*20+15+"px";
+    heart.style.animationDuration=Math.random()*3+3+"s";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),6000);
+}
+setInterval(createHeart,400);
+
+/* CONFETTI */
+const canvas=document.getElementById("confetti");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let pieces=[];
+
+function startConfetti(){
+    for(let i=0;i<150;i++){
+        pieces.push({
+            x:Math.random()*canvas.width,
+            y:Math.random()*canvas.height,
+            size:Math.random()*8+3,
+            speed:Math.random()*3+2
+        });
+    }
+    animate();
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="#ff2e63";
+    pieces.forEach(p=>{
+        ctx.fillRect(p.x,p.y,p.size,p.size);
+        p.y+=p.speed;
+        if(p.y>canvas.height)p.y=0;
+    });
+    requestAnimationFrame(animate);
+}
+
+</script>
+
+</body>
+</html>
